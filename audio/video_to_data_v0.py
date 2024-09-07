@@ -6,13 +6,13 @@ import csv
 import argparse
 
 # Set up argument parser
-parser = argparse.ArgumentParser(description="Process a video and generate data files.")
-parser.add_argument('--name', type=str, required=True, help='Name for the output files and directories')
+parser = argparse.ArgumentParser(description='Process a video file to extract data.')
+parser.add_argument('--file-name', type=str, required=True, help='Name of the input video file (without extension)')
 args = parser.parse_args()
 
 # Define paths
-video_path = '/Users/simonvanstipriaan/Sites/generative-audio-v0/src/mp4/sample_v2.mp4'
-output_dir = f'output/{args.name}'
+video_path = f'/Users/simonvanstipriaan/Sites/generative-audio-v0/src/mp4/{args.file_name}.mp4'
+output_dir = f'output/{args.file_name}'
 json_dir = os.path.join(output_dir, 'json')
 csv_dir = os.path.join(output_dir, 'csv')
 
@@ -21,8 +21,8 @@ os.makedirs(json_dir, exist_ok=True)
 os.makedirs(csv_dir, exist_ok=True)
 
 # Define output file paths
-json_file_path = os.path.join(json_dir, f'{args.name}.json')
-csv_file_path = os.path.join(csv_dir, f'{args.name}.csv')
+json_file_path = os.path.join(json_dir, f'{args.file_name}.json')
+csv_file_path = os.path.join(csv_dir, f'{args.file_name}.csv')
 
 # Initialize lists to store the data
 data = []
