@@ -1,2 +1,19 @@
-# Exclude Environment stuff
+# Virtual environment
 myenv/
+
+# Python bytecode
+*.pyc
+__pycache__/
+
+# IDE and editor configurations
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+
+# Generated Files - review exclusion
+# output/

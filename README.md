@@ -9,6 +9,8 @@ This project generates audio tracks based on visual data extracted from videos. 
 - Extracts visual data from video files.
 - Maps visual features to audio characteristics.
 - Generates and saves audio tracks as WAV files.
+- Supports various synthesis techniques including complex waveforms, additive, and subtractive synthesis.
+- Configurable waveform type and output filename via command-line arguments.
 
 ## Getting Started
 
@@ -56,20 +58,36 @@ Ensure you have the following installed:
     python video_to_audio_v2.py
     ```
 
-   This script processes the video and generates JSON and CSV files with visual data. The JSON file will include the `video_duration` field, which is essential for correlating the length of the generated audio with the length of the video.
+   This script processes the video and generates JSON files with visual data. The JSON file will include the `video_duration` field, which is essential for correlating the length of the generated audio with the length of the video.
 
 3. **Generate Audio from Visual Data**
 
+   **Legacy Method (v0):**
+   
     ```bash
     python audio_from_data_v0.py
     ```
 
-   This script creates a WAV file based on the extracted visual data. It uses the `video_duration` field from the JSON file to ensure that the length of the audio file corresponds to the length of the video.
+   This script creates a WAV file based on the extracted visual data using basic sine wave synthesis. It uses the `video_duration` field from the JSON file to ensure that the length of the audio file corresponds to the length of the video.
+
+   **Enhanced Method (v1):**
+   
+    ```bash
+    python audio_from_data_v1.py --wave-type sine --file-name output_sine.wav
+    python audio_from_data_v1.py --wave-type sawtooth --file-name output_sawtooth.wav
+    python audio_from_data_v1.py --wave-type square --file-name output_square.wav
+    python audio_from_data_v1.py --wave-type triangle --file-name output_triangle.wav
+    python audio_from_data_v1.py --wave-type additive --file-name output_additive.wav
+    python audio_from_data_v1.py --wave-type subtractive --file-name output_subtractive.wav
+    ```
+
+   This script creates a WAV file based on the extracted visual data using advanced synthesis techniques. It supports multiple waveform types and synthesis methods, which can be selected via command-line arguments. The `--file-name` argument allows you to specify the output filename. The `video_duration` field from the JSON file is used to ensure that the length of the audio file corresponds to the length of the video.
 
 ### Code
 
-- **`video_to_audio_v2.py`**: Extracts visual features from video and saves them to JSON and CSV files. Includes the `video_duration` in the JSON file for accurate audio length.
-- **`audio_from_data_v0.py`**: Generates audio from the visual features data and saves it as a WAV file. Uses the `video_duration` to determine frame duration and ensure correct audio length.
+- **`video_to_audio_v2.py`**: Extracts visual features from video and saves them to JSON files. Includes the `video_duration` in the JSON file for accurate audio length.
+- **`audio_from_data_v0.py`**: Generates audio from the visual features data and saves it as a WAV file using basic sine wave synthesis.
+- **`audio_from_data_v1.py`**: Generates audio from the visual features data and saves it as a WAV file using advanced synthesis techniques. Supports various waveform types and synthesis methods configurable via command-line arguments.
 
 ### JSON Data Structure
 
