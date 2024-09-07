@@ -73,15 +73,15 @@ Ensure you have the following installed:
    **Enhanced Method (v1):**
    
     ```bash
-    python audio_from_data_v1.py --wave-type sine --file-name output_sine.wav
-    python audio_from_data_v1.py --wave-type sawtooth --file-name output_sawtooth.wav
-    python audio_from_data_v1.py --wave-type square --file-name output_square.wav
-    python audio_from_data_v1.py --wave-type triangle --file-name output_triangle.wav
-    python audio_from_data_v1.py --wave-type additive --file-name output_additive.wav
-    python audio_from_data_v1.py --wave-type subtractive --file-name output_subtractive.wav
+    python audio_from_data_v1.py --wave-type sine
+    python audio_from_data_v1.py --wave-type sawtooth
+    python audio_from_data_v1.py --wave-type square
+    python audio_from_data_v1.py --wave-type triangle
+    python audio_from_data_v1.py --wave-type additive
+    python audio_from_data_v1.py --wave-type subtractive
     ```
 
-   This script creates a WAV file based on the extracted visual data using advanced synthesis techniques. It supports multiple waveform types and synthesis methods, which can be selected via command-line arguments. The `--file-name` argument allows you to specify the output filename. The `video_duration` field from the JSON file is used to ensure that the length of the audio file corresponds to the length of the video.
+   This script creates a WAV file based on the extracted visual data using advanced synthesis techniques. It supports multiple waveform types and synthesis methods, which can be selected via command-line arguments. You can also specify the output filename using the `--file-name` argument. The `video_duration` field from the JSON file is used to ensure that the length of the audio file corresponds to the length of the video.
 
 ### Code
 

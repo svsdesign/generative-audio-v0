@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Result</title>
+    <style>
+        #visualization {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generated Audio</h1>
+    <audio controls>
+        <source src="{{ url_for('download', filename=file_name) }}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+    <h2>Audio Visualization</h2>
+    <img src="{{ url_for('static', filename='combined_visualization.png') }}" alt="Audio Visualization">
+</body>
+</html>

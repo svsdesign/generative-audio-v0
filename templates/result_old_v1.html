@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Result</title>
+    <style>
+        #visualization {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generated Audio</h1>
+    <audio controls>
+        <source src="{{ url_for('download', filename=file_name) }}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+    <h2>Real-time Visualization</h2>
+    <canvas id="visualization"></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waapi/1.0.1/waapi.min.js"></script>
+    <script>
+        // JavaScript code to visualize the audio
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const canvas = document.getElementById('visualization');
+        const canvasContext = canvas.getContext('2d');
+        const audioElement = new Audio('{{ url_for('download', filename=file_name) }}');
+        const source = audioContext.createMediaElementSource(audioElement);
+        const analyser = audioContext.createAnalyser();
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+
+        analyser.fftSize = 256;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        function draw() {
+
+            
+    requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(dataArray);
+
+    canvasContext.fillStyle = 'rgb(0, 0, 0)';
+    canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+
+    const barWidth = (canvas.width / bufferLength) * 2.5;
+    let barHeight;
+    let x = 0;
+
+    for (let i = 0; i < bufferLength; i++) {
+        barHeight = dataArray[i];
+        canvasContext.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
+        canvasContext.fillRect(x, canvas.height - barHeight / 2, barWidth, barHeight / 2);
+        x += barWidth + 1;
+    }
+}
+
+        draw();
+    </script>
+</body>
+</html>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Result</title>
+    <style>
+        #visualization {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generated Audio</h1>
+    <audio controls>
+        <source src="{{ url_for('download', filename=file_name) }}" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+    <h2>Audio Visualization</h2>
+    <img src="{{ url_for('static', filename='combined_visualization.png') }}" alt="Audio Visualization">
+</body>
+</html>
