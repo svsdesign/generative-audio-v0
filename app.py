@@ -9,6 +9,7 @@ from audio.audio_utils import generate_waveform
 from audio.synthesis import apply_synthesis
 from audio.effects import apply_effects
 from audio.envelope import apply_envelope
+from audio.drum_synthesis import generate_drum_beat, save_drum_beat
 
 app = Flask(__name__)
 
@@ -17,7 +18,7 @@ UPLOAD_FOLDER = 'output/sample_v2/audio'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Function for audio generation
-def generate_audio(json_data, wave_type, file_name, synthesis_type, effects_type, envelope_type):
+def generate_audio(json_data, wave_type, file_name, synthesis_type, effects_type, envelope_type, drum_params):
     # Extract video duration and frame data
     video_duration = json_data['video_duration']
     frames = json_data['frames']
@@ -44,6 +45,17 @@ def generate_audio(json_data, wave_type, file_name, synthesis_type, effects_type
         wave = apply_effects(wave, effects_type)
         
         audio_data = np.concatenate((audio_data, wave))
+    
+    # Add drum sequence if parameters are provided
+    if drum_params:
+        drum_tempo, beats_per_measure, num_measures = drum_params
+        drum_signal = generate_drum_beat(drum_tempo, beats_per_measure, num_measures)
+        drum_file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'drum_beat.wav')
+        save_drum_beat(drum_file_path, drum_signal)
+        
+        # Mix drum signal with audio data (simple mix)
+        drum_signal = np.resize(drum_signal, len(audio_data))  # Resize drum signal to match audio data length
+        audio_data += drum_signal * 0.2  # Adjust drum volume
     
     # Normalize audio data
     audio_data = np.int16(audio_data / np.max(np.abs(audio_data)) * 32767)
@@ -72,9 +84,16 @@ def index():
             synthesis_type = request.form['synthesis_type']
             effects_type = request.form['effects_type']
             envelope_type = request.form['envelope_type']
+            
+            # Extract drum parameters if provided
+            drum_tempo = request.form.get('drum-tempo', type=int)
+            beats_per_measure = request.form.get('beats-per-measure', type=int)
+            num_measures = request.form.get('num-measures', type=int)
+            drum_params = (drum_tempo, beats_per_measure, num_measures) if all([drum_tempo, beats_per_measure, num_measures]) else None
+            
             file_name = f"{uuid.uuid4().hex}.wav"
             
-            generate_audio(json_data, wave_type, file_name, synthesis_type, effects_type, envelope_type)
+            generate_audio(json_data, wave_type, file_name, synthesis_type, effects_type, envelope_type, drum_params)
             return redirect(url_for('result', file_name=file_name))
     return render_template('index.html')
 

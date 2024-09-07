@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Disclaimer:** The contents of this file were created by AI (ChatGPT), as was much of the code in this repository. Please use with caution.
+**Disclaimer:** The contents of this file were created with the aid of AI (ChatGPT), as was much of the code in this repository. Please use with caution.
 
 This project generates audio tracks based on visual data extracted from videos. Visual features such as color, brightness, contrast, and motion are mapped to different audio characteristics to create unique soundscapes.
 
