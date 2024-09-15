@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.io.wavfile as wav
 
-def generate_drum_beat(tempo, beats_per_measure, num_measures, sample_rate=44100):
+def generate_drum_beat(tempo, beats_per_measure, num_measures, sample_rate=44100, stereo=False):
     """Generate a simple drum beat sequence."""
     t = np.arange(0, num_measures * beats_per_measure * 60 / tempo, 1 / sample_rate)
     signal = np.zeros(len(t))
@@ -17,7 +17,14 @@ def generate_drum_beat(tempo, beats_per_measure, num_measures, sample_rate=44100
         signal[start_index:end_index] += kick_amplitude * np.sin(2 * np.pi * kick_freq * t[start_index:end_index])
     
     # Normalize the signal
-    signal = np.int16((signal / np.max(np.abs(signal))) * 32767)
+    signal = signal / np.max(np.abs(signal))  # Normalize to [-1, 1]
+
+    if stereo:
+        # Duplicate the mono signal to create a stereo effect
+        signal = np.column_stack((signal, signal))
+    
+    # Convert to 16-bit PCM format
+    signal = np.int16(signal * 32767)
     
     return signal
 

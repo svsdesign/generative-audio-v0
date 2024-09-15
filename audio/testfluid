@@ -1,0 +1,4 @@
+# test_import.py
+import fluidsynth
+
+print("pyfluidsynth imported successfully!")

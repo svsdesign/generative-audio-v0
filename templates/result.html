@@ -3,22 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Result</title>
+    <title>Audio Generation Result</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
 </head>
 <body>
-    <h1>Audio Generation Result</h1>
-    <p>Your audio file has been generated successfully!</p>
-    <audio controls>
-        <source src="{{ url_for('download', filename=file_name) }}" type="audio/wav">
-        Your browser does not support the audio element.
-    </audio>
-    <h2>Visualizations</h2>
-    <img src="{{ url_for('static', filename='waveform.png') }}" alt="Waveform">
-    <img src="{{ url_for('static', filename='spectrogram.png') }}" alt="Spectrogram">
-    <img src="{{ url_for('static', filename='mel_spectrogram.png') }}" alt="Mel Spectrogram">
-    <img src="{{ url_for('static', filename='spectral_centroid.png') }}" alt="Spectral Centroid">
-    <img src="{{ url_for('static', filename='combined_visualization.png') }}" alt="Combined Visualization">
+    <div class="container mt-5">
+        <div class="row">
+
+            <a href="/sounds" class="button">Go to Soundboard</a>
+
+            <div class="col-12 text-center">
+                <h1>Audio Generation Result</h1>
+                <p>Your audio file has been generated successfully!</p>
+                <audio id="audioPlayer" controls class="mt-3">
+                    <source src="{{ url_for('download', filename=file_name) }}" type="audio/wav">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <a href="{{ url_for('download', filename=file_name) }}" class="btn btn-primary">Download Audio</a>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Go Back</a>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2>Instruments Used</h2>
+                <ul>
+                    {% if instruments_used %}
+                    {{ instruments_used }}
+                        {# {% for instrument in instruments_used %}
+                            <li>Instrument {{ instrument }}</li>
+                        {% endfor %}  #}
+                    {% else %}
+                        <li>No instruments used.</li>
+                    {% endif %}
+                </ul>
+
+                <h2>Overall Dominant Colors</h2>
+                <div class="d-flex flex-wrap">
+                    {% for color in overall_dominant_colors %}
+                        <div class="p-2 text-left">
+                            <div class="sound" 
+                                 data-sound="{{ url_for('static', filename=color.wav_file) }}"
+                                 style="background-color: {{ color.hex }}; width: 25vw; height: 25vw; padding:10px; margin: 0 auto; color:white; cursor: pointer; font-weight:medium; font-size:1vw;">
+                                <p><strong>RGB:</strong> {{ color.rgb }}<br>
+                                <strong>Hex:</strong> {{ color.hex }}<br>
+                                <strong>(Nearest Avail)Name:</strong> {{ color.name }}</p>
+            
+                                <div clas="p-1" style="background-color: {{ color.nearest_color }}; width:100%; height: auto; min-height:10vw; margin: 0; color:white;">  
+                                    <p><strong>Nearest Colour:</strong> {{ color.nearest_color }}</p>
+                                </div> 
+                            </div> 
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>        
+
+      
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2>Original Video</h2>
+                <video id="videoPlayer" controls class="w-100">
+                    <source src="{{ url_for('video', filename=video_filename) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2>Visualizations</h2>
+            </div>
+
+            <!-- Waveform -->
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='waveform.png') }}" class="card-img-top" alt="Waveform">
+                    <div class="card-body">
+                        <p class="card-text text-center">Waveform</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spectrogram -->
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='spectrogram.png') }}" class="card-img-top" alt="Spectrogram">
+                    <div class="card-body">
+                        <p class="card-text text-center">Spectrogram</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mel Spectrogram -->
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='mel_spectrogram.png') }}" class="card-img-top" alt="Mel Spectrogram">
+                    <div class="card-body">
+                        <p class="card-text text-center">Mel Spectrogram</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spectral Centroid -->
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='spectral_centroid.png') }}" class="card-img-top" alt="Spectral Centroid">
+                    <div class="card-body">
+                        <p class="card-text text-center">Spectral Centroid</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Combined Visualization -->
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='combined_visualization.png') }}" class="card-img-top" alt="Combined Visualization">
+                    <div class="card-body">
+                        <p class="card-text text-center">Combined Visualization</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+ 
+
+     <script>
+        // Synchronize video and audio playback
+        const videoPlayer = document.getElementById('videoPlayer');
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        videoPlayer.addEventListener('play', () => {
+            audioPlayer.play();
+        });
+
+        videoPlayer.addEventListener('pause', () => {
+            audioPlayer.pause();
+        });
+
+        videoPlayer.addEventListener('seeked', () => {
+            audioPlayer.currentTime = videoPlayer.currentTime;
+        });
+
+        videoPlayer.addEventListener('timeupdate', () => {
+            if (!audioPlayer.paused && audioPlayer.currentTime !== videoPlayer.currentTime) {
+                audioPlayer.currentTime = videoPlayer.currentTime;
+            }
+        });
+       
+        document.querySelectorAll('.sound').forEach((element) => {
+            element.addEventListener('click', function() {
+                const soundFile = element.getAttribute('data-sound');
+                console.log(soundFile);
+                const audio = new Audio(soundFile);
+                audio.play();
+            });
+        });
+    </script>
+
+
 </body>
 </html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>128-Button Soundboard</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: gray;
+        }
+        svg {
+            width: 100vmin;
+            height: 100vmin;
+        }
+        .sound-button {
+            cursor: pointer;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<svg viewBox="-400 -400 800 800" xmlns="http://www.w3.org/2000/svg" id="soundboard"></svg>
+<button id="download-json">Download JSON</button>
+
+<script>
+    const soundboard = document.getElementById('soundboard');
+    const hueSegments = 16; // Number of hue segments
+    const brightnessLevels = 8; // Number of brightness levels
+    const segmentData = {}; // Object to store index and hex color
+
+    function playSound(index) {
+        var audio = new Audio('/static/sounds/' + index + '.wav');
+        console.log("play sound", index);
+        audio.play();
+    }
+
+    // Helper function to convert HSL to Hex
+    function hslToHex(h, s, l) {
+        l /= 100;
+        const a = s * Math.min(l, 1 - l) / 100;
+        const f = n => {
+            const k = (n + h / 30) % 12;
+            const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+            return Math.round(255 * color).toString(16).padStart(2, '0'); // convert to Hex and pad
+        };
+        return `#${f(0)}${f(8)}${f(4)}`; // Return hex string
+    }
+
+    // Helper function to convert RGB to Hex
+    function rgbToHex(r, g, b) {
+        return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+    }
+
+    function generateColor(hue, brightness) {
+        return `hsl(${hue}, 100%, ${brightness}%)`;
+    }
+
+    function generateSegmentPath(startAngle, endAngle, outerRadius, innerRadius) {
+        const minInnerRadius = 0.5; // Small but non-zero value to ensure visibility
+        const effectiveInnerRadius = Math.max(innerRadius, minInnerRadius);
+
+        const x1 = Math.cos(startAngle) * outerRadius;
+        const y1 = Math.sin(startAngle) * outerRadius;
+        const x2 = Math.cos(endAngle) * outerRadius;
+        const y2 = Math.sin(endAngle) * outerRadius;
+
+        const innerX1 = Math.cos(startAngle) * effectiveInnerRadius;
+        const innerY1 = Math.sin(startAngle) * effectiveInnerRadius;
+        const innerX2 = Math.cos(endAngle) * effectiveInnerRadius;
+        const innerY2 = Math.sin(endAngle) * effectiveInnerRadius;
+
+        return `M ${innerX1} ${innerY1} 
+                L ${x1} ${y1} 
+                A ${outerRadius} ${outerRadius} 0 0 1 ${x2} ${y2} 
+                L ${innerX2} ${innerY2} 
+                A ${effectiveInnerRadius} ${effectiveInnerRadius} 0 0 0 ${innerX1} ${innerY1} 
+                Z`;
+    }
+
+    const radius = 300;
+    const maxBrightness = 90; // Maximum brightness, ensure not pure white
+
+    // Render segments from outermost to innermost
+    for (let j = 0; j < brightnessLevels; j++) {
+        const segmentInnerRadius = radius - (j * (radius / brightnessLevels));
+        const segmentOuterRadius = segmentInnerRadius - (radius / brightnessLevels);
+
+        for (let i = 0; i < hueSegments; i++) {
+            const startAngle = (i / hueSegments) * Math.PI * 2;
+            const endAngle = ((i + 1) / hueSegments) * Math.PI * 2;
+
+            // Adjust brightness to ensure the outermost segment is not pure white
+            const brightness = maxBrightness - (j / (brightnessLevels - 1)) * (maxBrightness - 0);
+
+            let color;
+            let hexColor;
+            if (brightness === 0) {
+                // Distributed logic for the first hue segment (black) and lighter shades
+                const grayValue = Math.floor((255 / hueSegments) * i); // Calculate gray value
+                color = `rgb(${grayValue}, ${grayValue}, ${grayValue})`; // Set grayscale color
+
+                if (i === 0) {
+                    color = `rgb(0, 0, 0)`; // Ensure the first one is pure black
+                    hexColor = "#000000"; // Black in hex
+                } else {
+                    hexColor = rgbToHex(grayValue, grayValue, grayValue);
+                }
+            } else {
+                // Standard color logic (convert HSL to Hex)
+                color = generateColor((i / hueSegments) * 360, brightness);
+                hexColor = hslToHex((i / hueSegments) * 360, 100, brightness);
+            }
+
+            const pathData = generateSegmentPath(startAngle, endAngle, segmentInnerRadius, segmentOuterRadius);
+
+            const segment = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            segment.setAttribute('d', pathData);
+            segment.setAttribute('fill', color);
+            segment.setAttribute('class', 'sound-button');
+
+            // Store the index and hex color in the object
+            segmentData[i * brightnessLevels + j] = hexColor;
+
+            segment.addEventListener('click', () => playSound(i * brightnessLevels + j));
+            soundboard.appendChild(segment);
+        }
+    }
+
+    // Function to download JSON file
+    function downloadJSON() {
+        const jsonData = JSON.stringify(segmentData, null, 2); // Convert object to JSON string
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'soundboard_data.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Add event listener to download button
+    document.getElementById('download-json').addEventListener('click', downloadJSON);
+
+</script>
+
+</body>
+</html>

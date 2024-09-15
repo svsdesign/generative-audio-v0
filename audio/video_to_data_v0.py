@@ -10,6 +10,8 @@ parser = argparse.ArgumentParser(description='Process a video file to extract da
 parser.add_argument('--file-name', type=str, required=True, help='Name of the input video file (without extension)')
 args = parser.parse_args()
 
+# python audio/video_to_data_v0.py --file-name sample_v563
+
 # Define paths
 video_path = f'/Users/simonvanstipriaan/Sites/generative-audio-v0/src/mp4/{args.file_name}.mp4'
 output_dir = f'output/{args.file_name}'

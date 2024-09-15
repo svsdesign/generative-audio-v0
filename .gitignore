@@ -20,3 +20,6 @@ output/
 
 # Source Files - for input
 src/
+
+# static files
+static/

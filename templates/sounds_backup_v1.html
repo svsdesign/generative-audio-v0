@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soundboard</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+        }
+        .circle {
+            display: grid;
+            grid-template-columns: repeat(16, 40px);
+            grid-template-rows: repeat(16, 40px);
+            gap: 1px;
+        }
+        .segment {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+        .segment:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="circle">
+        <!-- The segments will be added dynamically by the script below -->
+    </div>
+    <script>
+
+        function playSound(index) {
+            var audio = new Audio('/static/sounds/' + index + '.wav');
+            audio.play();
+        }
+
+
+
+        // Fetch the color data from the JSON file
+        fetch('static/color_mapping.json')
+            .then(response => response.json())
+            .then(colorMapping => {
+                const circle = document.querySelector('.circle');
+                
+                Object.values(colorMapping).forEach((color, index) => {
+                    const segment = document.createElement('div');
+                    segment.className = 'segment';
+                    segment.style.backgroundColor = color;
+                    segment.addEventListener('click', () => {
+                        // alert(`Playing sound ${index + 1}`);
+
+                         playSound(index);
+
+                    });
+                    circle.appendChild(segment);
+                });
+            })
+            .catch(error => console.error('Error loading colors:', error));
+    </script>
+</body>
+</html>
+s

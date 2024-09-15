@@ -21,13 +21,25 @@ def plot_waveform(file_path):
     plt.close()
 
 def plot_spectrogram(file_path):
+    # Load audio file
     y, sr = librosa.load(file_path)
-    plt.figure(figsize=(12, 8))
+
+    # Compute the spectrogram (get magnitude of complex-valued STFT)
     D = librosa.amplitude_to_db(np.abs(librosa.stft(y)), ref=np.max)
+
+    # Create a figure
+    plt.figure(figsize=(10, 4))
+
+    # Plot the spectrogram
     librosa.display.specshow(D, sr=sr, x_axis='time', y_axis='log')
+
+    # Add color bar and labels
     plt.colorbar(format='%+2.0f dB')
     plt.title('Spectrogram')
-    plt.savefig('static/spectrogram.png')
+    plt.tight_layout()
+
+    # Save or show the figure
+    plt.savefig(f'{file_path}_spectrogram.png')
     plt.close()
 
 def plot_mel_spectrogram(file_path):
