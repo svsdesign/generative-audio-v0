@@ -1,166 +1,160 @@
-# Generative Audio from Visual Data
+# Generative Audio v0
 
 ## Project Overview
 
+
 **Disclaimer:** The contents of this file were created with the aid of AI (ChatGPT), as was much of the code in this repository. Please use with caution. https://chatgpt.com/c/66dc65dd-640c-8009-97c4-4d56e994b5f4
 
-This project generates audio tracks based on visual data extracted from videos. Visual features such as color, brightness, contrast, and motion are mapped to different audio characteristics to create unique soundscapes.
+
+**Generative Audio v0** is a tool designed to transform video data into generative music. By analyzing visual aspects of video frames such as dominant colors and brightness, the system algorithmically generates MIDI files and synthesized audio, creating a dynamic relationship between visuals and sound. This makes it ideal for creative projects exploring the intersection of audio and video data.
 
 ## Features
 
-- Extracts visual data from video files.
-- Maps visual features to audio characteristics.
-- Generates and saves audio tracks as WAV files.
-- Supports various synthesis techniques including complex waveforms, additive, and subtractive synthesis.
-- Configurable waveform type and output filename via command-line arguments.
-- Web interface for file upload and parameter configuration.
+- **Frame-by-frame analysis**: Extracts visual features (color, brightness) from each video frame.
+- **Generative music creation**: Converts visual data into MIDI and synthesized audio.
+- **Algorithmic composition**: Implements techniques such as fractals and Markov chains to generate musical patterns.
+- **Customizable instruments and sound mappings**: Maps visual properties (e.g., color) to specific musical parameters like notes and instruments.
 
-## Getting Started
+## Folder Structure
 
-### Prerequisites
+The project is organized as follows: - THIS IS WRONG- wip; will ater
 
-Ensure you have the following installed:
-- Python 3.x
-- pip (Python package installer)
+generative-audio-v0/
+├── audio_generation.py # Generates audio from frame data.
+├── midi_generation.py # Converts visual data to MIDI format.
+├── video_to_frames.py # Extracts visual properties from video frames.
+├── app.py # Main application file.
+├── color_mapping.py # Defines color-to-MIDI mappings.
+├── /src
+│   ├── /mp4 # Folder for input video files (.mp4 format).
+├── /output
+│   ├── /midi # Folder for generated MIDI files.
+│   ├── /audio # Folder for generated audio files.
+├── /audio
+│   ├── experiment_v7.py # Advanced audio processing script.
+├── /utils
+│   ├── nearest_color.py # Utility script to find the nearest color from a mapping.
+└── README.md # The current readme file.
 
-### Installation
+### Explanation of Important Files:
 
-1. **Clone the Repository**
+- **`app.py`**: The main file that coordinates the project. This file includes the web-based interface for uploading videos, running the processing pipeline, and downloading the generated audio or MIDI files.
+- **`video_to_frames.py`**: Extracts individual frames from videos and analyzes them for color and brightness.
+- **`midi_generation.py`**: Converts visual data (e.g., brightness, dominant colors) from the frames into MIDI data.
+- **`audio_generation.py`**: Synthesizes audio from visual data using various wave types (e.g., sine, square, etc.).
+- **`/src/mp4`**: Folder where input video files are placed for processing.
+- **`/output/midi`**: Folder where generated MIDI files are saved.
+- **`/output/audio`**: Folder where generated audio files are stored.
+- **`nearest_color.py`**: A utility to find the nearest color from a predefined mapping of colors to musical instruments.
 
-    ```bash
-    git clone https://github.com/yourusername/generative-audio.git
-    cd generative-audio
-    ```
+## Prerequisites
 
-2. **Set Up a Virtual Environment**
+Before running the project, make sure you have the following installed:
 
-    ```bash
-    python -m venv myenv
-    source myenv/bin/activate  # On Windows use `myenv\Scripts\activate`
-    ```
+- Python 3.9 or higher
+- `ffmpeg` (for video processing)
+- `virtualenv` (recommended)
 
-3. **Install Dependencies**
+## Installation
 
-    ```bash
-    pip install numpy scipy flask
-    ```
+1. Clone the repository to your local machine:
 
-4. **Download Additional Requirements**
+    git clone https://github.com/svsdesign/generative-audio-v0.git
+    cd generative-audio-v0
 
-    If additional requirements are needed, list them here.
+2. Create and activate a virtual environment:
 
-### Usage
+    python3 -m venv env
+    source env/bin/activate  # On Windows: `env\Scripts\activate`
 
-1. **Prepare Your Video File**
+3. Install the necessary Python dependencies:
 
-   Place your video file in the `src/mp4/` directory or specify a path to your video file in the script.
+    pip install -r requirements.txt
 
-2. **Run the Script to Extract Visual Data**
+## Usage
 
-    ```bash
-    python audio/video_to_data_v0.py --file-name yourfilename
-    ```
+### Step 1: Add a Video
 
-    ```bash
-    python audio/video_to_data_v1.py --file-name sample_v2
-    ```
+Place your `.mp4` video files inside the `/src/mp4` folder.
 
-    ```bash
-    python audio/video_to_data_v3.py --file-name sample_v1
-    ```
+### Step 2: Extract Frames and Visual Data
 
-    ```bash
-    python audio/video_to_data_v3.py --file-name sample_v3
-    ```
+To extract visual properties (e.g., dominant colors, brightness) from the video, use the `video_to_frames.py` script:
 
-     ```bash
-    python audio/video_to_data_v3.py --file-name sample_v4
-    ```
+    python video_to_frames.py --input src/mp4/your_video.mp4 --output output/frames.json
 
-    ```bash
-    python audio/video_to_data_v4.py --file-name sample_v2-2
-    ```
+This command will extract the frames from your video and save their visual properties in `frames.json`.
 
+### Step 3: Generate MIDI
 
-  ```bash
-    python audio/video_to_data_v5.py --file-name sample_v8
-    ```
+Once the frame data is ready, you can generate a MIDI file using the `midi_generation.py` script:
 
+    python midi_generation.py --input output/frames.json --output output/midi/music_output.mid --bpm 120 --num-tracks 4
 
-   This script processes the video and generates JSON and CSV files with visual data. The JSON file will include the `video_duration` field, which is essential for correlating the length of the generated audio with the length of the video.
+### Step 4: Generate Audio
 
-3. **Generate Audio from Visual Data**
+To synthesize audio from the frame data, run the `audio_generation.py` script:
 
-   **Legacy Method (v0):**
-   
-    ```bash
-    python audio/audio_from_data_v0.py
-    ```
+    python audio_generation.py --input output/frames.json --output output/audio/music_output.wav --wave-type sine
 
-   This script creates a WAV file based on the extracted visual data using basic sine wave synthesis. It uses the `video_duration` field from the JSON file to ensure that the length of the audio file corresponds to the length of the video.
+#### Command-Line Options
 
-   **Enhanced Method (v1):**
-   
-    ```bash
-    python audio/audio_from_data_v1.py --wave-type sine
-    python audio/audio_from_data_v1.py --wave-type sawtooth
-    python audio/audio_from_data_v1.py --wave-type square
-    python audio/audio_from_data_v1.py --wave-type triangle
-    python audio/audio_from_data_v1.py --wave-type additive
-    python audio/audio_from_data_v1.py --wave-type subtractive
-    ```
+- `--bpm`: Set the tempo (beats per minute) for the MIDI file.
+- `--num-tracks`: Specify the number of tracks for MIDI generation.
+- `--wave-type`: Set the waveform type for synthesized audio (sine, square, etc.).
+- `--instrument`: Specify a MIDI instrument number.
 
-   This script creates a WAV file based on the extracted visual data using advanced synthesis techniques. It supports multiple waveform types and synthesis methods, which can be selected via command-line arguments. You can also specify the output filename using the `--file-name` argument. The `video_duration` field from the JSON file is used to ensure that the length of the audio file corresponds to the length of the video.
+### Example Workflow
 
-4. **Using the Web Interface**
+Here is a complete example of processing a video and generating music:
 
-   - Start the Flask server:
+1. Place `your_video.mp4` inside the `/src/mp4` directory.
 
-     ```bash
-     python app.py
-     ```
+2. Run the following command to extract frames and save the visual data:
 
-   - Navigate to `http://localhost:5000` in your web browser.
-   - Upload your video file and configure the audio generation parameters via the web interface.
+    python video_to_frames.py --input src/mp4/your_video.mp4 --output output/frames.json
 
-### Code
+3. Generate the MIDI file based on the extracted visual data:
 
-- **`video_to_data_v0.py`**: Extracts visual features from video and saves them to JSON and CSV files. Includes the `video_duration` in the JSON file for accurate audio length.
-- **`audio_from_data_v0.py`**: Generates audio from the visual features data and saves it as a WAV file using basic sine wave synthesis.
-- **`audio_from_data_v1.py`**: Generates audio from the visual features data and saves it as a WAV file using advanced synthesis techniques. Supports various waveform types and synthesis methods configurable via command-line arguments.
-- **`app.py`**: Flask web application to upload video files, configure audio generation parameters, and visualize results.
+    python midi_generation.py --input output/frames.json --output output/midi/music_output.mid --bpm 120 --num-tracks 4
 
-### JSON Data Structure
+4. Convert the frame data into audio:
 
-The JSON file generated by the `video_to_data_v0.py` script includes:
+    python audio_generation.py --input output/frames.json --output output/audio/music_output.wav --wave-type sine
 
-- **video_duration**: The total duration of the video in seconds.
-- **frames**: A list of dictionaries, each containing:
-  - `avg_color`: Average color of the frame (list of RGB values).
-  - `mass`: Mass of the frame (number of pixels within a certain color range).
-  - `brightness`: Brightness of the frame.
-  - `contrast`: Contrast of the frame.
-  - `motion`: Motion detected in the frame.
+## Project Structure
 
-### Dependencies
+The main project directory is structured as follows:
 
-- **numpy**: For numerical operations.
-- **scipy**: For audio file handling.
-- **flask**: For the web interface.
+generative-audio-v0/
+├── audio/
+│   ├── audio_generation.py  # Synthesizes audio from frame data
+│   ├── midi_generation.py   # Converts visual data to MIDI format
+│   └── utils/               # Helper scripts
+│       └── nearest_color.py # Finds the closest matching color for a frame
+├── src/
+│   └── mp4/                 # Input folder for video files
+├── output/
+│   ├── frames.json          # Extracted visual data from frames
+│   ├── midi/                # Folder containing generated MIDI files
+│   └── audio/               # Folder containing generated audio files
+├── video_to_frames.py       # Extracts visual data from video frames
+├── app.py                   # Flask web app for interactive use
+└── README.md                # Documentation for the project
 
-### Troubleshooting
+## Dependencies
 
-If you encounter issues:
+Ensure you have the following Python packages installed:
 
-- Check if the directory paths are correct.
-- Ensure that all dependencies are installed.
-- Verify that your internet connection is stable if you're installing packages.
-- Make sure the JSON file structure matches the expected format with `video_duration` and `frames`.
+- numpy
+- midiutil
+- opencv-python
+- flask
 
-### Contributing
+You can install the required packages using pip:
 
-Feel free to submit issues or pull requests if you have suggestions or improvements for the project.
+    pip install -r requirements.txt
 
-### License
+## License
 
-Specify the license under which your project is distributed.
+This project is licensed under the MIT License. See the LICENSE file for details.
