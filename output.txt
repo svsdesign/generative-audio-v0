@@ -1,0 +1,97 @@
+.
+├── README.md
+├── README_old_v0.1.md
+├── app
+│   ├── _legacy
+│   │   ├── app_backup_v1.py
+│   │   ├── app_backup_v2.py
+│   │   ├── app_backup_v3.py
+│   │   ├── app_backup_v4.py
+│   │   ├── app_backup_v5.py
+│   │   ├── app_backup_v6.py
+│   │   ├── app_backup_v7.py
+│   │   ├── app_backup_v8.py
+│   │   ├── app_new-broken_v1.py
+│   │   ├── app_old-broken.py
+│   │   └── app_old-broken_v2.py
+│   ├── audio_from_data
+│   │   ├── audio_from_data_v0.py
+│   │   └── audio_from_data_v1.py
+│   ├── effects
+│   │   ├── drum_synthesis.py
+│   │   ├── effects.py
+│   │   ├── envelope.py
+│   │   └── synthesis.py
+│   ├── generate_colors
+│   │   ├── _legacy
+│   │   ├── generate_colors.py
+│   │   └── generate_colors_v2.py
+│   ├── generate_sounds
+│   │   ├── check_sound.py
+│   │   └── generate_sounds.py
+│   ├── video_to_data
+│   │   ├── _legacy
+│   │   │   ├── video_to_audio_v0.py
+│   │   │   ├── video_to_audio_v1.py
+│   │   │   ├── video_to_audio_v2.py
+│   │   │   ├── video_to_data_v0.py
+│   │   │   ├── video_to_data_v1.py
+│   │   │   ├── video_to_data_v2.py
+│   │   │   ├── video_to_data_v3.py
+│   │   │   ├── video_to_data_v4.py
+│   │   │   └── video_to_data_v5.py
+│   │   └── video_to_data.py
+│   └── visualize_audio
+│       ├── crete.py
+│       └── visualize_audio.py
+├── app.py
+├── fluidsynth.wav
+├── generative-audio-v0.code-workspace
+├── midi
+│   ├── experiments
+│   │   ├── experiment_template.py
+│   │   ├── experiment_v1.py
+│   │   ├── experiment_v2.py
+│   │   ├── experiment_v3.py
+│   │   ├── experiment_v4.py
+│   │   ├── experiment_v5.py
+│   │   ├── experiment_v6.py
+│   │   └── experiment_v7.py
+│   └── misc
+│       ├── makeaphexsound.py
+│       ├── makegamesound.py
+│       └── makesound.py
+├── output.txt
+├── requirements.txt
+├── src
+│   ├── FluidR3_GM
+│   │   ├── FluidR3_GM.sf2
+│   │   ├── README.txt
+│   │   └── copyright.txt
+│   └── mp4
+│       ├── sample_v1.mp4
+│       ├── sample_v2-2.mp4
+│       ├── sample_v2.mp4
+│       ├── sample_v3.mp4
+│       ├── sample_v4-2.mp4
+│       ├── sample_v4.mp4
+│       ├── sample_v5.mp4
+│       ├── sample_v6.mp4
+│       ├── sample_v7.mp4
+│       └── sample_v8.mp4
+├── templates
+│   ├── _legacy
+│   │   ├── index_backup_v1.html
+│   │   ├── index_old_v1.html
+│   │   ├── result_old_v1.html
+│   │   ├── result_old_v2.html
+│   │   └── sounds_backup_v1.html
+│   ├── index.html
+│   ├── result.html
+│   └── sounds.html
+└── utils
+    ├── audio_utils.py
+    ├── logging_config.py
+    └── nearest_color.py
+
+20 directories, 75 files
