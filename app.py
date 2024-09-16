@@ -5,25 +5,31 @@ import scipy.io.wavfile as wav
 from scipy.io.wavfile import write
 import json
 import uuid
-import random
-import pretty_midi
+# import random
+# import pretty_midi
 from midiutil import MIDIFile
 from colormath.color_objects import sRGBColor, LabColor
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cie2000
-from audio.visualize_audio import plot_combined
-from audio.audio_utils import generate_waveform
-from audio.synthesis import apply_synthesis
-from audio.effects import apply_effects
-from audio.envelope import apply_envelope
-from audio.drum_synthesis import generate_drum_beat, save_drum_beat
+# from audio.visualize_audio import plot_combined
+# from app.visualize_audio.visualize_audio import plot_combined
+from _app.visualize_audio.visualize_audio import plot_combined
+# from audio.audio_utils import generate_waveform
+from utils.audio_utils import generate_waveform
+# from audio.synthesis import apply_synthesis
+from _app.effects.synthesis import apply_synthesis
+# from audio.effects import apply_effects
+from _app.effects.effects import apply_effects   
+# from audio.envelope import apply_envelope
+from _app.effects.envelope import apply_envelope
+# from audio.drum_synthesis import generate_drum_beat, save_drum_beat
+from _app.effects.drum_synthesis import generate_drum_beat, save_drum_beat
 from midi2audio import FluidSynth
 from utils.nearest_color import find_nearest_color  # Import the function from the nearest_color file
 # from midi.experiment_v1 import add_music_layers
-from midi.experiment_v6 import add_music_layers
+from midi.experiments.experiment_v6 import add_music_layers
 import logging
 from utils.logging_config import setup_logging
-
 
 
 # Added this to fix an error in imported library

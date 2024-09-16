@@ -39,13 +39,7 @@ generative-audio-v0/
 ### Explanation of Important Files:
 
 - **`app.py`**: The main file that coordinates the project. This file includes the web-based interface for uploading videos, running the processing pipeline, and downloading the generated audio or MIDI files.
-- **`video_to_frames.py`**: Extracts individual frames from videos and analyzes them for color and brightness.
-- **`midi_generation.py`**: Converts visual data (e.g., brightness, dominant colors) from the frames into MIDI data.
-- **`audio_generation.py`**: Synthesizes audio from visual data using various wave types (e.g., sine, square, etc.).
-- **`/src/mp4`**: Folder where input video files are placed for processing.
-- **`/output/midi`**: Folder where generated MIDI files are saved.
-- **`/output/audio`**: Folder where generated audio files are stored.
-- **`nearest_color.py`**: A utility to find the nearest color from a predefined mapping of colors to musical instruments.
+- **`adio/video_to_data/video_to_data.py`**: Extracts visual features from video and saves them to JSON and CSV files. Includes the `video_duration` in the JSON file for accurate audio length.
 
 ## Prerequisites
 
@@ -73,85 +67,144 @@ Before running the project, make sure you have the following installed:
 
 ## Usage
 
-### Step 1: Add a Video
+1. **Prepare Your Video File**
 
-Place your `.mp4` video files inside the `/src/mp4` folder.
+   Place your video file in the `src/mp4/` directory or specify a path to your video file in the script.
 
-### Step 2: Extract Frames and Visual Data
+2. **Run the Script to Extract Visual Data**
 
-To extract visual properties (e.g., dominant colors, brightness) from the video, use the `video_to_frames.py` script:
 
-    python video_to_frames.py --input src/mp4/your_video.mp4 --output output/frames.json
+    ```bash
+    python audio/video_to_data/video_to_data.py --file-name namoofmp4file
+    ```
 
-This command will extract the frames from your video and save their visual properties in `frames.json`.
+   This script processes the video and generates JSON and CSV files with visual data. The JSON file will include the `video_duration` field, which is essential for correlating the length of the generated audio with the length of the video.
 
-### Step 3: Generate MIDI
+3. **Generate Audio from Visual Data**
 
-Once the frame data is ready, you can generate a MIDI file using the `midi_generation.py` script:
+   **Legacy Method (v0):**
+   
+    ```bash
+    python audio/audio_from_data_v0.py
+    ```
 
-    python midi_generation.py --input output/frames.json --output output/midi/music_output.mid --bpm 120 --num-tracks 4
+   This script creates a WAV file based on the extracted visual data using basic sine wave synthesis. It uses the `video_duration` field from the JSON file to ensure that the length of the audio file corresponds to the length of the video.
 
-### Step 4: Generate Audio
+   **Enhanced Method (v1):**
+   
+    ```bash
+    python audio/audio_from_data_v1.py --wave-type sine
+    python audio/audio_from_data_v1.py --wave-type sawtooth
+    python audio/audio_from_data_v1.py --wave-type square
+    python audio/audio_from_data_v1.py --wave-type triangle
+    python audio/audio_from_data_v1.py --wave-type additive
+    python audio/audio_from_data_v1.py --wave-type subtractive
+    ```
 
-To synthesize audio from the frame data, run the `audio_generation.py` script:
+   This script creates a WAV file based on the extracted visual data using advanced synthesis techniques. It supports multiple waveform types and synthesis methods, which can be selected via command-line arguments. You can also specify the output filename using the `--file-name` argument. The `video_duration` field from the JSON file is used to ensure that the length of the audio file corresponds to the length of the video.
 
-    python audio_generation.py --input output/frames.json --output output/audio/music_output.wav --wave-type sine
+4. **Using the Web Interface**
 
-#### Command-Line Options
+   - Start the Flask server:
 
-- `--bpm`: Set the tempo (beats per minute) for the MIDI file.
-- `--num-tracks`: Specify the number of tracks for MIDI generation.
-- `--wave-type`: Set the waveform type for synthesized audio (sine, square, etc.).
-- `--instrument`: Specify a MIDI instrument number.
+     ```bash
+     python app.py
+     ```
 
-### Example Workflow
+   - Navigate to `http://localhost:5000` in your web browser.
+   - Upload your json file file (from output folders) and configure the audio generation parameters via the web interface.
+    
 
-Here is a complete example of processing a video and generating music:
-
-1. Place `your_video.mp4` inside the `/src/mp4` directory.
-
-2. Run the following command to extract frames and save the visual data:
-
-    python video_to_frames.py --input src/mp4/your_video.mp4 --output output/frames.json
-
-3. Generate the MIDI file based on the extracted visual data:
-
-    python midi_generation.py --input output/frames.json --output output/midi/music_output.mid --bpm 120 --num-tracks 4
-
-4. Convert the frame data into audio:
-
-    python audio_generation.py --input output/frames.json --output output/audio/music_output.wav --wave-type sine
 
 ## Project Structure
 
+
 The main project directory is structured as follows:
+  ```
+  run: tree -I 'myenv|__pycache__|output|static' > output.txt
+  ```
 
-generative-audio-v0/
-├── audio/
-│   ├── audio_generation.py  # Synthesizes audio from frame data
-│   ├── midi_generation.py   # Converts visual data to MIDI format
-│   └── utils/               # Helper scripts
-│       └── nearest_color.py # Finds the closest matching color for a frame
-├── src/
-│   └── mp4/                 # Input folder for video files
-├── output/
-│   ├── frames.json          # Extracted visual data from frames
-│   ├── midi/                # Folder containing generated MIDI files
-│   └── audio/               # Folder containing generated audio files
-├── video_to_frames.py       # Extracts visual data from video frames
-├── app.py                   # Flask web app for interactive use
-└── README.md                # Documentation for the project
+  ```
+   .
+├── README.md                              # Primary project documentation and instructions
+├── README_old_v0.1.md                     # Legacy documentation from version 0.1
+├── app                                    # Folder containing the main app and associated scripts
+│   ├── _legacy                            # Backup and legacy versions of the application
+│   │   ├── app_backup_v1.py               # Backup of the app (version 1)
+│   │   ├── app_backup_v2.py               # Backup of the app (version 2)
+│   │   ├── app_backup_v3.py               # Backup of the app (version 3)
+│   │   ├── app_backup_v4.py               # Backup of the app (version 4)
+│   │   ├── app_backup_v5.py               # Backup of the app (version 5)
+│   │   ├── app_backup_v6.py               # Backup of the app (version 6)
+│   │   ├── app_backup_v7.py               # Backup of the app (version 7)
+│   │   ├── app_backup_v8.py               # Backup of the app (version 8)
+│   │   ├── app_new-broken_v1.py           # Newer broken version of the app (v1)
+│   │   ├── app_old-broken.py              # Older broken version of the app
+│   │   └── app_old-broken_v2.py           # Another older broken version of the app (v2)
+│   ├── audio_from_data                    # Scripts to generate audio from visual data
+│   │   ├── audio_from_data_v0.py          # Audio generation script from visual data (version 0)
+│   │   └── audio_from_data_v1.py          # Audio generation script from visual data (version 1)
+│   ├── effects                            # Audio effects and synthesis related scripts
+│   │   ├── drum_synthesis.py              # Script for synthesizing drum sounds
+│   │   ├── effects.py                     # Script for applying audio effects (e.g., reverb, echo)
+│   │   ├── envelope.py                    # Script to control audio envelope (attack, decay, sustain, release)
+│   │   └── synthesis.py                   # Core script for sound synthesis
+│   ├── generate_colors                    # Scripts for generating colors from visual data
+│   │   ├── _legacy                        # Legacy color generation scripts
+│   │   ├── generate_colors.py             # Main script to generate color mappings from visual data
+│   │   └── generate_colors_v2.py          # Updated version of color generation script
+│   ├── generate_sounds                    # Scripts related to generating sound from processed data
+│   │   ├── check_sound.py                 # Utility script to check and verify sound output
+│   │   └── generate_sounds.py             # Main script for generating sounds from processed visual data
+│   ├── video_to_data                      # Scripts to extract data from video frames
+│   │   ├── _legacy                        # Legacy scripts for converting video data to audio or color
+│   │   │   ├── video_to_audio_v0.py       # Converts video data to audio (version 0)
+│   │   │   ├── video_to_audio_v1.py       # Converts video data to audio (version 1)
+│   │   │   ├── video_to_audio_v2.py       # Converts video data to audio (version 2)
+│   │   │   ├── video_to_data_v0.py        # Extracts visual data from video frames (version 0)
+│   │   │   ├── video_to_data_v1.py        # Extracts visual data from video frames (version 1)
+│   │   │   ├── video_to_data_v2.py        # Extracts visual data from video frames (version 2)
+│   │   │   ├── video_to_data_v3.py        # Extracts visual data from video frames (version 3)
+│   │   │   ├── video_to_data_v4.py        # Extracts visual data from video frames (version 4)
+│   │   │   └── video_to_data_v5.py        # Extracts visual data from video frames (version 5)
+│   │   └── video_to_data.py               # Main script for video-to-data conversion
+│   └── visualize_audio                    # Scripts for visualizing audio output
+│       ├── crete.py                       # Script related to creating visual representations of audio
+│       └── visualize_audio.py             # Main script for visualizing the generated audio
+├── app.py                                 # Main Flask application for generating audio from video
+├── fluidsynth.wav                         # Example generated audio using FluidSynth
+├── generative-audio-v0.code-workspace     # VS Code workspace configuration file for the project
+├── midi                                   # MIDI generation and processing scripts
+│   ├── experiments                        # Experimental scripts for MIDI generation
+│   │   ├── experiment_template.py         # Template for MIDI generation experiments
+│   │   ├── experiment_v1.py               # MIDI experiment (version 1)
+│   │   ├── experiment_v2.py               # MIDI experiment (version 2)
+│   │   ├── experiment_v3.py               # MIDI experiment (version 3)
+│   │   ├── experiment_v4.py               # MIDI experiment (version 4)
+│   │   ├── experiment_v5.py               # MIDI experiment (version 5)
+│   │   ├── experiment_v6.py               # MIDI experiment (version 6)
+│   │   └── experiment_v7.py               # MIDI experiment (version 7)
+│   └── misc                               # Miscellaneous MIDI-related scripts
+│       ├── makeaphexsound.py              # Script to generate Aphex Twin-inspired sounds
+│       ├── makegamesound.py               # Script to generate sounds suitable for games
+│       └── makesound.py                   # General sound generation script
+├── output.txt                             # Output file listing the project's structure
+├── requirements.txt                       # List of Python dependencies for the project
+├── src                                    # Source folder containing soundfont files and sample videos
+│   ├── FluidR3_GM                         # Folder for FluidR3 GM soundfont files
+│   │   ├── FluidR3_GM.sf2           
 
+   ```
 ## Dependencies
 
-Ensure you have the following Python packages installed:
+Ensure you have the following Python packages installed: - svs note: needs updating
 
 - numpy
 - midiutil
 - opencv-python
 - flask
 
-You can install the required packages using pip:
+You can install the required packages using pip: - svs note: needs updating
 
     pip install -r requirements.txt
 
