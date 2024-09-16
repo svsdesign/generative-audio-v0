@@ -15,107 +15,6 @@
 - **Algorithmic composition**: Implements techniques such as fractals and Markov chains to generate musical patterns.
 - **Customizable instruments and sound mappings**: Maps visual properties (e.g., color) to specific musical parameters like notes and instruments.
 
-## Folder Structure
-
-The project is organized as follows: - THIS IS WRONG- wip; will ater
-
-generative-audio-v0/
-├── audio_generation.py # Generates audio from frame data.
-├── midi_generation.py # Converts visual data to MIDI format.
-├── video_to_frames.py # Extracts visual properties from video frames.
-├── app.py # Main application file.
-├── color_mapping.py # Defines color-to-MIDI mappings.
-├── /src
-│   ├── /mp4 # Folder for input video files (.mp4 format).
-├── /output
-│   ├── /midi # Folder for generated MIDI files.
-│   ├── /audio # Folder for generated audio files.
-├── /audio
-│   ├── experiment_v7.py # Advanced audio processing script.
-├── /utils
-│   ├── nearest_color.py # Utility script to find the nearest color from a mapping.
-└── README.md # The current readme file.
-
-### Explanation of Important Files:
-
-- **`app.py`**: The main file that coordinates the project. This file includes the web-based interface for uploading videos, running the processing pipeline, and downloading the generated audio or MIDI files.
-- **`adio/video_to_data/video_to_data.py`**: Extracts visual features from video and saves them to JSON and CSV files. Includes the `video_duration` in the JSON file for accurate audio length.
-
-## Prerequisites
-
-Before running the project, make sure you have the following installed:
-
-- Python 3.9 or higher
-- `ffmpeg` (for video processing)
-- `virtualenv` (recommended)
-
-## Installation
-
-1. Clone the repository to your local machine:
-
-    git clone https://github.com/svsdesign/generative-audio-v0.git
-    cd generative-audio-v0
-
-2. Create and activate a virtual environment:
-
-    python3 -m venv env
-    source env/bin/activate  # On Windows: `env\Scripts\activate`
-
-3. Install the necessary Python dependencies:
-
-    pip install -r requirements.txt
-
-## Usage
-
-1. **Prepare Your Video File**
-
-   Place your video file in the `src/mp4/` directory or specify a path to your video file in the script.
-
-2. **Run the Script to Extract Visual Data**
-
-
-    ```bash
-    python audio/video_to_data/video_to_data.py --file-name namoofmp4file
-    ```
-
-   This script processes the video and generates JSON and CSV files with visual data. The JSON file will include the `video_duration` field, which is essential for correlating the length of the generated audio with the length of the video.
-
-3. **Generate Audio from Visual Data**
-
-   **Legacy Method (v0):**
-   
-    ```bash
-    python audio/audio_from_data_v0.py
-    ```
-
-   This script creates a WAV file based on the extracted visual data using basic sine wave synthesis. It uses the `video_duration` field from the JSON file to ensure that the length of the audio file corresponds to the length of the video.
-
-   **Enhanced Method (v1):**
-   
-    ```bash
-    python audio/audio_from_data_v1.py --wave-type sine
-    python audio/audio_from_data_v1.py --wave-type sawtooth
-    python audio/audio_from_data_v1.py --wave-type square
-    python audio/audio_from_data_v1.py --wave-type triangle
-    python audio/audio_from_data_v1.py --wave-type additive
-    python audio/audio_from_data_v1.py --wave-type subtractive
-    ```
-
-   This script creates a WAV file based on the extracted visual data using advanced synthesis techniques. It supports multiple waveform types and synthesis methods, which can be selected via command-line arguments. You can also specify the output filename using the `--file-name` argument. The `video_duration` field from the JSON file is used to ensure that the length of the audio file corresponds to the length of the video.
-
-4. **Using the Web Interface**
-
-   - Start the Flask server:
-
-     ```bash
-     python app.py
-     ```
-
-   - Navigate to `http://localhost:5000` in your web browser.
-   - Upload your json file file (from output folders) and configure the audio generation parameters via the web interface.
-    
-
-
 ## Project Structure
 
 
@@ -195,6 +94,17 @@ The main project directory is structured as follows:
 │   │   ├── FluidR3_GM.sf2           
 
    ```
+
+
+## Prerequisites
+
+Before running the project, make sure you have the following installed: - svs note needs updating
+
+- Python 3.9 or higher
+- `ffmpeg` (for video processing)
+- `virtualenv` (recommended)
+
+
 ## Dependencies
 
 Ensure you have the following Python packages installed: - svs note: needs updating
@@ -207,6 +117,83 @@ Ensure you have the following Python packages installed: - svs note: needs updat
 You can install the required packages using pip: - svs note: needs updating
 
     pip install -r requirements.txt
+
+## Installation
+
+1. Clone the repository to your local machine:
+
+    git clone https://github.com/svsdesign/generative-audio-v0.git
+    cd generative-audio-v0
+
+2. Create and activate a virtual environment:
+
+    python3 -m venv env
+    source env/bin/activate  # On Windows: `env\Scripts\activate`
+
+3. Install the necessary Python dependencies:
+
+    pip install -r requirements.txt
+
+## Usage
+
+1. **Prepare Your Video File**
+
+   Place your video file in the `src/mp4/` directory or specify a path to your video file in the script.
+
+2. **Run the Script to Extract Visual Data**
+
+
+    ```bash
+    python audio/video_to_data/video_to_data.py --file-name namoofmp4file
+    ```
+
+   This script processes the video and generates JSON and CSV files with visual data. The JSON file will include the `video_duration` field, which is essential for correlating the length of the generated audio with the length of the video.
+
+
+3. **Use the Web Interface**
+
+   - Start the Flask server:
+
+     ```bash
+     python app.py
+     ```
+
+   - Navigate to `http://localhost:5000` in your web browser.
+   - Upload your json file file (from output folders) and configure the audio generation parameters via the web interface.
+    
+
+## Explanation of Important Files:
+
+
+- **`_app/video_to_data/video_to_data.py`**: Extracts visual features from video and saves them to JSON and CSV files. Includes the `video_duration` in the JSON file for accurate audio length.
+
+
+- **`app.py`**: The main file that coordinates the project and loads the web interface. This file includes the web-based interface for uploading json data, running the processing pipeline, and loading the results page for downloading the generated audio.
+
+
+## Legacy
+
+   **Audio from data (v0):**
+   
+    ```bash
+    python _app/audio_from_data/audio_from_data_v0.py
+    ```
+
+   This script creates a WAV file based on the extracted visual data using basic sine wave synthesis. It uses the `video_duration` field from the JSON file to ensure that the length of the audio file corresponds to the length of the video.
+
+   **Enhanced Method (v1):**
+   
+    ```bash
+    python _app/audio_from_data/audio_from_data_v1.py --wave-type sine
+    python _app/audio_from_data/audio_from_data_v1.py --wave-type sawtooth
+    python _app/audio_from_data/audio_from_data_v1.py --wave-type square
+    python _app/audio_from_data/audio_from_data_v1.py --wave-type triangle
+    python _app/audio_from_data/audio_from_data_v1.py --wave-type additive
+    python _app/audio_from_data/audio_from_data_v1.py --wave-type subtractive
+    ```
+
+   This script creates a WAV file based on the extracted visual data using advanced synthesis techniques. It supports multiple waveform types and synthesis methods, which can be selected via command-line arguments. You can also specify the output filename using the `--file-name` argument. The `video_duration` field from the JSON file is used to ensure that the length of the audio file corresponds to the length of the video.
+
 
 ## License
 
